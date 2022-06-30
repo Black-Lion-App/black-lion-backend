@@ -21,7 +21,7 @@ export class AuthService {
                 if (!passwordIsValid) {
                     return reject({ message: 'Email or Password invalid!', code: 401 });
                 }
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+                const token = jwt.sign({ id: user.id }, 'bezkoder-secret-key', {
                     expiresIn: 604800, // 1 week hours
                     algorithm: 'HS256'
                 });
@@ -46,17 +46,17 @@ export class AuthService {
                 if (!user) {
                     return reject({ message: 'No user found with that email address', code: 401 });
                 }
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+                const token = jwt.sign({ id: user.id }, 'bezkoder-secret-key', {
                     expiresIn: 7200, // 2 hours
                     algorithm: 'HS256'
                 });
                 user.resetPasswordToken = token;
                 user.save();
                 // TODO: send email to the user
-                const host = process.env.APP_HOST;
+                const host = 'https://localhost:3000';
                 const mailOptions: MailDataRequired = {
                     to: user.email,
-                    from: process.env.APP_EMAIL_SENDER,
+                    from: '',
                     subject: 'Password Reset',
                     html: '<h3>You are receiving this because you (or someone else) have requested the reset of the password for your account.</h3>' +
                         '<h3>Please click on the following link, or paste this into your browser to complete the process:</h3> <br/>' +
@@ -89,7 +89,7 @@ export class AuthService {
                 user.save();
                 const mailOptions: MailDataRequired = {
                     to: user.email,
-                    from: process.env.APP_EMAIL_SENDER,
+                    from: '',
                     subject: 'Password Reset',
                     html: '<h3>Hello,</h3>' +
                         '<h3>This is a confirmation that the password for your account ' + user.email + ' has just been changed.</h3>'

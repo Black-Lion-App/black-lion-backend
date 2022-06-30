@@ -5,7 +5,7 @@ import { BaseController } from '../api/v1/_base.controller';
 import { compose } from 'compose-middleware';
 
 var validateJwt = expressJwt({
-    secret: process.env.JWT_SECRET,
+    secret: 'bezkoder-secret-key',
     algorithms: ['HS256']
 });
 
@@ -26,7 +26,7 @@ export function isAuthenticated() {
             const user = await User.findOne({ _id: req.user.id });
 
             if (!user) {
-                
+
                 return BaseController.prototype.response(res, {}, 401, "Not Authorized");
             }
 
@@ -42,7 +42,7 @@ export function isAuthenticated() {
  * Returns a jwt token signed by the app secret
  */
 export function signToken(id, role) {
-    return jwt.sign({ _id: id, role }, process.env.JWT_SECRET, {
+    return jwt.sign({ _id: id, role }, 'bezkoder-secret-key', {
         expiresIn: 60 * 60 * 5
     });
 }
