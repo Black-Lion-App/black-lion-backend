@@ -10,6 +10,10 @@ const { Types } = Schema;
 const UserSchema = new Schema<IUserModel<IUser>>({
 	firstName: { type: Types.String },
 	lastName: { type: Types.String },
+	username: {
+		type: Types.String,
+		unique: true
+	},
 	email: {
 		type: Types.String,
 		unique: true,
@@ -34,7 +38,10 @@ const UserSchema = new Schema<IUserModel<IUser>>({
 	},
 	provider: String,
 	salt: String,
-	phone: { type: Types.String },
+	phone: {
+		type: Types.String,
+		unique: true
+	},
 	address: { type: Types.String, requied: true },
 	city: { type: Types.String, requied: true },
 	country: { type: Types.String, requied: true },
@@ -109,6 +116,46 @@ UserSchema
 				throw err;
 			});
 	}, 'The specified email address is already in use.');
+
+
+// Validate Username is not taken
+UserSchema
+	.path('username')
+	.validate(function (value) {
+		return this.constructor.findOne({ username: value }).exec()
+			.then(user => {
+				if (user) {
+					if (this.id === user.id) {
+						return true;
+					}
+					return false;
+				}
+				return true;
+			})
+			.catch(err => {
+				throw err;
+			});
+	}, 'The specified Username is already in use.');
+
+
+// Validate phone is not taken
+UserSchema
+	.path('phone')
+	.validate(function (value) {
+		return this.constructor.findOne({ phone: value }).exec()
+			.then(user => {
+				if (user) {
+					if (this.id === user.id) {
+						return true;
+					}
+					return false;
+				}
+				return true;
+			})
+			.catch(err => {
+				throw err;
+			});
+	}, 'The specified Phone Number is already in use.');
 
 var validatePresenceOf = function (value) {
 	return value && value.length;

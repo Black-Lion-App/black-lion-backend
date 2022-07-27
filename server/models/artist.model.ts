@@ -15,7 +15,8 @@ const ArtistSchema = new Schema<IArtistModel<IArtist>>({
         required: true
     },
     telephone: {
-        type: Types.String
+        type: Types.String,
+        required: true
     },
     city: {
         type: Types.String
@@ -27,7 +28,8 @@ const ArtistSchema = new Schema<IArtistModel<IArtist>>({
         type: Types.String
     },
     spotify_id: {
-        type: Types.String
+        type: Types.String,
+        required: true
     },
     songstats_artist_id: {
         type: Types.String
@@ -39,10 +41,12 @@ const ArtistSchema = new Schema<IArtistModel<IArtist>>({
         type: Types.String
     },
     created: {
-        type: Types.String
+        type: Types.String,
+		default: Date.now()
     },
     modified: {
-        type: Types.String
+        type: Types.String,
+		default: Date.now()
     }
 });
 

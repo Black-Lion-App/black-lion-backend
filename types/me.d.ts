@@ -1,9 +1,10 @@
 export interface IMeUser {
 	id: string;
 	firstName: string;
-	lastName: string,
+	lastName: string;
+	username: string;
 	email: string;
-	phone?: string,
+	phone?: string;
 	address?: string;
 	city?: string;
 	country?: string;

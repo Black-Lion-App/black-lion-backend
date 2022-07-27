@@ -1,8 +1,10 @@
 export interface IloginResponse {
     id: string;
-    email: string;
     firstName: string;
     lastName: string;
+    email: string;
+    username: string;
+    phone: string;
     accessToken: string;
     date: Date,
 }

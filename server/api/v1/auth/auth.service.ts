@@ -12,10 +12,17 @@ export class AuthService {
         return new Promise(async (resolve, reject) => {
             const { email, password } = credentials;
             try {
-                // TODO: Fix typing
-                const user = await User.findOne({ email });
+
+                let user = null;
+                user = await User.findOne({ email });
                 if (!user) {
-                    return reject({ message: 'User not exists', code: 401 });
+                    user = await User.findOne({ username: email });
+                    if(!user) {
+                        user = await User.findOne({ phone: email });
+                        if(!user) {
+                            return reject({ message: 'User not exists', code: 401 });
+                        }
+                    }
                 }
                 const passwordIsValid = (user as any).authenticate(password);
                 if (!passwordIsValid) {
@@ -30,6 +37,8 @@ export class AuthService {
                     email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
+                    username: user.username,
+                    phone: user.phone,
                     accessToken: token,
                     date: user.date
                 })
