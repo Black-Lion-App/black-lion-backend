@@ -3,6 +3,7 @@ import { Document, PaginateModel } from "mongoose";
 export interface IUser extends Document {
 	firstName: string;
 	lastName: string;
+	username: string;
 	email: string;
 	phone?: string;
 	address?: string;
