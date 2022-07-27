@@ -35,7 +35,7 @@ export class Controller extends BaseController {
     }
     async forgotPassword(req: Request, res: Response): Promise<void> {
         try {
-            const user = await AuthService.forgotPassword(req.body);
+            const user = await AuthService.forgotPassword(req.body, req.headers.host);
             super.response(res, user, 200, "Email sent Successfully!");
         }
         catch (error) {
