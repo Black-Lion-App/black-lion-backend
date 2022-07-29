@@ -5,7 +5,7 @@ export class MailService {
     sendEmail(mailOptions: MailDataRequired) {
         return new Promise((resolve, reject) => {
             // set SENDGRID api key
-            setApiKey(process.env.SENDGRID_API_KEY)
+            setApiKey('')
 
             // sending email request
             sendEmail(mailOptions)

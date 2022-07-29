@@ -14,4 +14,4 @@ connectDB().then(
 
 export default new Server()
   .router(routes)
-  .listen(parseInt(process.env.PORT));
+  .listen(9000);

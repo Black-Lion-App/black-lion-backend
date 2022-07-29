@@ -2,14 +2,14 @@
   "name": "blacklion",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "start": "cross-env NODE_ENV=local nodemon ./server/index.ts",
+    "start": "cross-env NODE_ENV=local nodemon ./server/server.ts",
     "dev": "cross-env NODE_ENV=development npm run start:watch",
     "start:prod": "cross-env NODE_ENV=production npm run start:watch",
     "start:staging": "cross-env NODE_ENV=staging npm run start:watch",
-    "start:dev": "cross-env NODE_ENV=development ts-node-dev ./server/index.ts",
-    "start:watch": "ts-node-dev --respawn --transpile-only ./server/index.ts",
+    "start:dev": "cross-env NODE_ENV=development ts-node-dev ./server/server.ts",
+    "start:watch": "ts-node-dev --respawn --transpile-only ./server/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

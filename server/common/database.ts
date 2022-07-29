@@ -50,9 +50,7 @@ export function connectDB() {
 		});
 
 		try {
-			const MONGO_URI = process.env.NODE_ENV === 'development' ? process.env.MONGODB_URI_DEV :
-				process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI_PRODUCTION :
-					process.env.NODE_ENV === 'staging' ? process.env.MONGODB_URI_STAGING : process.env.MONGODB_URI_LOCAL;
+			const MONGO_URI = 'mongodb+srv://admin:dsgnry_admin_pass_2022@blacklion.z8eqjt2.mongodb.net/flux_blacklion?retryWrites=true&w=majority';
 			mongoose.connect(MONGO_URI, dbOption)
 		}
 		catch (err) {
