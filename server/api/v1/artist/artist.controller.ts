@@ -23,7 +23,7 @@ export class Controller extends BaseController {
     }
     async post(req: Request, res: Response): Promise<void> {
         try {
-            const response = await ArtistService.post(req.body, req.headers.host, req.file);
+            const response = await ArtistService.post(req.body, req.file);
             super.response(res, response, 200, "");
         }
         catch (error) {
@@ -62,7 +62,7 @@ export class Controller extends BaseController {
     }
     async updateWithProfile(req: Request, res: Response): Promise<void> {
         try {
-            const response = await ArtistService.updateWithProfile(req.params.id, req.body, req.headers.host, req.file);
+            const response = await ArtistService.updateWithProfile(req.params.id, req.body, req.file);
             super.response(res, response, 200, "");
         }
         catch (error) {

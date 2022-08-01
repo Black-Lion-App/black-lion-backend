@@ -37,6 +37,9 @@ const ArtistSchema = new Schema<IArtistModel<IArtist>>({
     avatar: {
         type: Types.String
     },
+    avatarKey: {
+        type: Types.String
+    },
     user_id: {
         type: Types.String
     },
