@@ -17,7 +17,6 @@ export class AuthService {
                         obj.avatar = url
                     }
                 }
-                console.log(serverRequest[serverRequest.length - 1])
                 return resolve(serverRequest);
             } catch (e) {
                 return reject(e);
