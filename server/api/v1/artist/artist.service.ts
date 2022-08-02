@@ -50,7 +50,11 @@ export class AuthService {
     async getById(id): Promise<IArtist> {
         return new Promise(async (resolve, reject) => {
             try {
-                const [serverRequest] = await Artist.find({ _id: id })
+                let [serverRequest] = await Artist.find({ _id: id });
+                if (serverRequest?.avatarKey) {
+                    const url: any = await AwsService.getFromAWSCloudS3(serverRequest.avatarKey);
+                    serverRequest.avatar = url
+                }
                 return resolve(serverRequest);
             } catch (e) {
                 return reject(e);
