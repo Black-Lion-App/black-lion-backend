@@ -1,5 +1,7 @@
 import { IMeUser } from '../../types/me';
 import { IUser } from '../../types/user';
+import path from "path";
+import { v4 as uuidv4 } from 'uuid';
 
 export class HelperService {
 
@@ -11,6 +13,14 @@ export class HelperService {
             email: user['email'],
             username: user?.username
         } as IMeUser;
+    }
+
+    handleFileDetails(file) {
+        let requestedFile = file;
+        const filename = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+        const extension = path.parse(file.originalname).ext;
+        requestedFile.originalname = `${filename}${extension}`;
+        return requestedFile;
     }
 
 }

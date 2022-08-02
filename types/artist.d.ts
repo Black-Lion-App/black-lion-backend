@@ -10,6 +10,7 @@ export interface IArtist extends Document {
     spotify_id: string; 
     songstats_artist_id: string; 
     avatar: string; 
+    avatarKey: string;
     user_id: string; 
     created: Date; 
     modified: Date; 

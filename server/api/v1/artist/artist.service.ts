@@ -1,5 +1,6 @@
 import { IArtist } from "../../../../types/artist";
 import { Artist } from "../../../models";
+import AwsService from "../../../services/aws.service";
 
 export class AuthService {
 
@@ -8,32 +9,42 @@ export class AuthService {
     async get(options): Promise<Array<IArtist>> {
         return new Promise(async (resolve, reject) => {
             try {
-                const { offset, limit } = options;
-                const serverRequest = await Artist.find({})
-                resolve(serverRequest);
+                let serverRequest = await Artist.find({})
+                for (let request of serverRequest) {
+                    let obj = request as any;
+                    if (obj?.avatarKey) {
+                        const url = await AwsService.getFromAWSCloudS3(obj.avatarKey);
+                        obj.avatar = url
+                    }
+                }
+                console.log(serverRequest[serverRequest.length - 1])
+                return resolve(serverRequest);
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
         })
     }
-    async post(payload: IArtist, host: string, file: any): Promise<IArtist> {
+    async post(payload: IArtist, file: any): Promise<IArtist> {
         return new Promise(async (resolve, reject) => {
             try {
                 if (!file) {
                     return reject({ code: 400, message: "Server returned error." })
                 }
 
-                const docUrl = `http://${host}/${file.path}`;
+                await AwsService.uploadToAWSCloudS3(file);
 
                 if (!payload) {
                     return reject({ code: 400, message: "Server returned error." })
                 }
-                payload.avatar = docUrl;
+
+                payload.avatar = "";
+                payload.avatarKey = file.originalname;
 
                 const serverRequest = new Artist(payload);
-                resolve(await serverRequest.save());
+
+                return resolve(await serverRequest.save());
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
         })
     }
@@ -41,9 +52,9 @@ export class AuthService {
         return new Promise(async (resolve, reject) => {
             try {
                 const [serverRequest] = await Artist.find({ _id: id })
-                resolve(serverRequest);
+                return resolve(serverRequest);
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
         })
     }
@@ -60,17 +71,20 @@ export class AuthService {
                 const update = await Artist.findOneAndUpdate({ _id: id }, payload)
                 return resolve(update);
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
         })
     }
-    async updateWithProfile(id, payload: IArtist, host: string, file): Promise<IArtist> {
+    async updateWithProfile(id, payload: IArtist, file): Promise<IArtist> {
         return new Promise(async (resolve, reject) => {
             try {
+                await AwsService.removeFromAWSCloudS3(payload.avatarKey);
+
                 if (!file) {
                     return reject({ code: 400, message: "File Not Found, Server returned error." })
                 }
-                const docUrl = `http://${host}/${file.path}`;
+
+                await AwsService.uploadToAWSCloudS3(file);
 
                 if (!id) {
                     return reject({ code: 400, message: "Invalid id, Server returned error." })
@@ -80,7 +94,9 @@ export class AuthService {
                     return reject({ code: 400, message: "Invalid payload, Server returned error." })
                 }
 
-                payload.avatar = docUrl;
+                payload.avatar = "";
+                payload.avatarKey = file.originalname;
+
                 const update = await Artist.findOneAndUpdate({ _id: id }, payload)
 
                 return resolve(update);
@@ -99,7 +115,7 @@ export class AuthService {
                 const request = await Artist.findOneAndDelete({ _id: id })
                 return resolve(request);
             } catch (e) {
-                reject(e);
+                return reject(e);
             }
         })
     }
