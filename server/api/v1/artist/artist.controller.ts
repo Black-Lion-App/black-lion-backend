@@ -3,6 +3,7 @@ import l, { logger } from "../../../common/logger";
 import { manageError } from "../../../helper/response.helper";
 import ArtistService from "./artist.service";
 import { BaseController } from "../_base.controller";
+import helperService from "../../../services/helper.service";
 
 export class Controller extends BaseController {
     async get(req: Request, res: Response): Promise<void> {
@@ -23,7 +24,7 @@ export class Controller extends BaseController {
     }
     async post(req: Request, res: Response): Promise<void> {
         try {
-            const response = await ArtistService.post(req.body, req.file);
+            const response = await ArtistService.post(req.body, helperService.handleFileDetails(req.file));
             super.response(res, response, 200, "");
         }
         catch (error) {
@@ -62,7 +63,7 @@ export class Controller extends BaseController {
     }
     async updateWithProfile(req: Request, res: Response): Promise<void> {
         try {
-            const response = await ArtistService.updateWithProfile(req.params.id, req.body, req.file);
+            const response = await ArtistService.updateWithProfile(req.params.id, req.body, helperService.handleFileDetails(req.file));
             super.response(res, response, 200, "");
         }
         catch (error) {

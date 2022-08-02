@@ -1,7 +1,6 @@
 import { IArtist } from "../../../../types/artist";
 import { Artist } from "../../../models";
 import AwsService from "../../../services/aws.service";
-import rimraf from "rimraf";
 
 export class AuthService {
 
@@ -11,9 +10,9 @@ export class AuthService {
         return new Promise(async (resolve, reject) => {
             try {
                 let serverRequest = await Artist.find({})
-                for(let request of serverRequest) {
+                for (let request of serverRequest) {
                     let obj = request as any;
-                    if(obj?.avatarKey) {
+                    if (obj?.avatarKey) {
                         const url = await AwsService.getFromAWSCloudS3(obj.avatarKey);
                         obj.avatar = url
                     }
@@ -32,18 +31,17 @@ export class AuthService {
                     return reject({ code: 400, message: "Server returned error." })
                 }
 
-                const awsResult: any = await AwsService.uploadToAWSCloudS3(file);
+                await AwsService.uploadToAWSCloudS3(file);
 
                 if (!payload) {
                     return reject({ code: 400, message: "Server returned error." })
                 }
 
                 payload.avatar = "";
-                payload.avatarKey = file.filename;
+                payload.avatarKey = file.originalname;
 
                 const serverRequest = new Artist(payload);
 
-                rimraf('uploads/*', function () { });
                 return resolve(await serverRequest.save());
             } catch (e) {
                 return reject(e);
@@ -85,7 +83,8 @@ export class AuthService {
                 if (!file) {
                     return reject({ code: 400, message: "File Not Found, Server returned error." })
                 }
-                const awsResult: any = await AwsService.uploadToAWSCloudS3(file);
+
+                await AwsService.uploadToAWSCloudS3(file);
 
                 if (!id) {
                     return reject({ code: 400, message: "Invalid id, Server returned error." })
@@ -96,11 +95,10 @@ export class AuthService {
                 }
 
                 payload.avatar = "";
-                payload.avatarKey = awsResult?.Key;
-                
+                payload.avatarKey = file.originalname;
+
                 const update = await Artist.findOneAndUpdate({ _id: id }, payload)
 
-                rimraf('uploads/*', function () { });
                 return resolve(update);
             } catch (e) {
                 reject(e);

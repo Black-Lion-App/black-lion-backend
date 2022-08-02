@@ -1,15 +1,6 @@
 import multer from "multer";
-import path from "path";
-import { v4 as uuidv4 } from 'uuid';
 
 export function uploadMiddleware() {
-    const fileStorageEngine = multer.diskStorage({
-      destination: './public',
-      filename: (req, file, cb) => {
-          const filename = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
-          const extension = path.parse(file.originalname).ext;
-          cb(null, `${filename}${extension}`)
-      }
-  });
+  const fileStorageEngine = multer.memoryStorage();
   return multer({ storage: fileStorageEngine });
 }

@@ -27,9 +27,9 @@ export class AwsService {
                 const params = {
                     Bucket: this.S3_AWS_BUCKET_NAME,
                     Key: id
-                };
+                };  
                 const command = new GetObjectCommand(params);
-                const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+                const url = await getSignedUrl(this.s3, command);
                 return resolve(url);
             } catch (err) {
                 return reject(err);
@@ -40,11 +40,10 @@ export class AwsService {
     async uploadToAWSCloudS3(file) {
         return new Promise(async (resolve, reject) => {
             try {
-                const fileStream = fs.readFileSync(file.path, { encoding: 'utf8' });
                 const params = {
                     Bucket: this.S3_AWS_BUCKET_NAME,
-                    Body: Buffer.from(fileStream, 'base64'),
-                    Key: file.filename
+                    Body: file.buffer,
+                    Key: file.originalname
                 }
                 const command = new PutObjectCommand(params);
                 const send = await this.s3.send(command);
